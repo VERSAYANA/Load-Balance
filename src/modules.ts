@@ -21,7 +21,7 @@ export function addClient(client: Client, server: Server) {
     return server
 }
 
-type fuzzyLoad = [number, number, number, number, number]
+export type fuzzyLoad = [number, number, number, number, number]
 
 
 export function calUtilization(server: Server): Server {
@@ -52,33 +52,63 @@ export function calServerLoad(server: Server): Server {
 
 export function fuzzifyServer (inputs: Array<Server>): Array<Server> {
     for (let i = 0; i < inputs.length; i++) {
-        let load = inputs[i].load;
-        let veryLow = 0;
-        let low = 0;
-        let medium = 0;
-        let high = 0;
-        let veryHigh = 0;
+        inputs[i].fuzzyLoad = calcFuzzyLoad(inputs[i])
+        // let load = inputs[i].load;
+        // let veryLow = 0;
+        // let low = 0;
+        // let medium = 0;
+        // let high = 0;
+        // let veryHigh = 0;
 
-        if (load <= 10) {
-            veryLow = 1;
-        } else if (load > 10 && load <= 30) {
-            veryLow = (30 - load) / 20;
-            low = (load - 10) / 20;
-        } else if (load > 30 && load <= 50) {
-            low = (50 - load) / 20;
-            medium = (load - 30) / 20;
-        } else if (load > 50 && load <= 70) {
-            medium = (70 - load) / 20;
-            high = (load - 50) / 20;
-        } else if (load > 70 && load <= 90) {
-            high = (90 - load) / 20;
-            veryHigh = (load - 70) / 20;
-        } else if (load > 90) {
-            veryHigh = 1;
-        }
+        // if (load <= 10) {
+        //     veryLow = 1;
+        // } else if (load > 10 && load <= 30) {
+        //     veryLow = (30 - load) / 20;
+        //     low = (load - 10) / 20;
+        // } else if (load > 30 && load <= 50) {
+        //     low = (50 - load) / 20;
+        //     medium = (load - 30) / 20;
+        // } else if (load > 50 && load <= 70) {
+        //     medium = (70 - load) / 20;
+        //     high = (load - 50) / 20;
+        // } else if (load > 70 && load <= 90) {
+        //     high = (90 - load) / 20;
+        //     veryHigh = (load - 70) / 20;
+        // } else if (load > 90) {
+        //     veryHigh = 1;
+        // }
 
-        inputs[i].fuzzyLoad = [veryLow, low, medium, high, veryHigh];
+        // inputs[i].fuzzyLoad = [veryLow, low, medium, high, veryHigh];
     }
 
     return inputs;
+}
+
+function calcFuzzyLoad (server: Server): fuzzyLoad {
+    let load = server.load;
+    let veryLow = 0;
+    let low = 0;
+    let medium = 0;
+    let high = 0;
+    let veryHigh = 0;
+
+    if (load <= 10) {
+        veryLow = 1;
+    } else if (load > 10 && load <= 30) {
+        veryLow = (30 - load) / 20;
+        low = (load - 10) / 20;
+    } else if (load > 30 && load <= 50) {
+        low = (50 - load) / 20;
+        medium = (load - 30) / 20;
+    } else if (load > 50 && load <= 70) {
+        medium = (70 - load) / 20;
+        high = (load - 50) / 20;
+    } else if (load > 70 && load <= 90) {
+        high = (90 - load) / 20;
+        veryHigh = (load - 70) / 20;
+    } else if (load > 90) {
+        veryHigh = 1;
+    }
+
+    return [veryLow, low, medium, high, veryHigh]
 }
