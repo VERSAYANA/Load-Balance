@@ -1,5 +1,5 @@
 
-export interface Server {
+interface Server {
     ramCapacity: number,
     cpuCapacity: number,
     hardCapacity: number,
@@ -20,7 +20,7 @@ export interface Server {
     status?: status
 }
 
-export interface Cluster {
+interface Cluster {
     servers: Array<Server>,
 
     ramCapacity?: number,
@@ -37,25 +37,25 @@ export interface Cluster {
 
     load?: number,
     fuzzyLoad?: fuzzyLoad
-
+    status?: Array<status>
 }
 
-export interface Client {
+interface Client {
     ramUsage: number,
     cpuUsage: number,
     hardUsage: number
 }
 
-export function addClient(client: Client, server: Server) {
+function addClient(client: Client, server: Server) {
     server.clients.push(client)
     return server
 }
 
-export type fuzzyLoad = [number, number, number, number, number];
-export type fuzzyOutput = [number, number, number];
-export type status = -1 | 0 | 1;
+type fuzzyLoad = [number, number, number, number, number];
+type fuzzyOutput = [number, number, number];
+type status = -1 | 0 | 1;
 
-export function calServerUtilization(server: Server): Server {
+function calServerUtilization(server: Server): Server {
     let totalRamUsage: number = 0;
     let totalCpuUsage: number = 0;
     let totalHardUsage: number = 0;
@@ -76,7 +76,7 @@ export function calServerUtilization(server: Server): Server {
     return server
 }
 
-export function calServerLoad(server: Server): Server {
+function calServerLoad(server: Server): Server {
     if (server.hardUtilization >= 100) {
         server.load = 100;
     } else {
@@ -85,39 +85,39 @@ export function calServerLoad(server: Server): Server {
     return server
 }
 
-export function fuzzifyServer(inputs: Array<Server>): Array<Server> {
-    for (let i = 0; i < inputs.length; i++) {
-        inputs[i].fuzzyLoad = calcServerFuzzyLoad(inputs[i])
-        // let load = inputs[i].load;
-        // let veryLow = 0;
-        // let low = 0;
-        // let medium = 0;
-        // let high = 0;
-        // let veryHigh = 0;
+//  function fuzzifyServer(inputs: Array<Server>): Array<Server> {
+//     for (let i = 0; i < inputs.length; i++) {
+//         inputs[i].fuzzyLoad = calcServerFuzzyLoad(inputs[i])
+// let load = inputs[i].load;
+// let veryLow = 0;
+// let low = 0;
+// let medium = 0;
+// let high = 0;
+// let veryHigh = 0;
 
-        // if (load <= 10) {
-        //     veryLow = 1;
-        // } else if (load > 10 && load <= 30) {
-        //     veryLow = (30 - load) / 20;
-        //     low = (load - 10) / 20;
-        // } else if (load > 30 && load <= 50) {
-        //     low = (50 - load) / 20;
-        //     medium = (load - 30) / 20;
-        // } else if (load > 50 && load <= 70) {
-        //     medium = (70 - load) / 20;
-        //     high = (load - 50) / 20;
-        // } else if (load > 70 && load <= 90) {
-        //     high = (90 - load) / 20;
-        //     veryHigh = (load - 70) / 20;
-        // } else if (load > 90) {
-        //     veryHigh = 1;
-        // }
+// if (load <= 10) {
+//     veryLow = 1;
+// } else if (load > 10 && load <= 30) {
+//     veryLow = (30 - load) / 20;
+//     low = (load - 10) / 20;
+// } else if (load > 30 && load <= 50) {
+//     low = (50 - load) / 20;
+//     medium = (load - 30) / 20;
+// } else if (load > 50 && load <= 70) {
+//     medium = (70 - load) / 20;
+//     high = (load - 50) / 20;
+// } else if (load > 70 && load <= 90) {
+//     high = (90 - load) / 20;
+//     veryHigh = (load - 70) / 20;
+// } else if (load > 90) {
+//     veryHigh = 1;
+// }
 
-        // inputs[i].fuzzyLoad = [veryLow, low, medium, high, veryHigh];
-    }
+// inputs[i].fuzzyLoad = [veryLow, low, medium, high, veryHigh];
+//     }
 
-    return inputs;
-}
+//     return inputs;
+// }
 
 function calcClusterCapacityAndUsage(cluster: Cluster): Cluster {
     let servers = cluster.servers;
@@ -151,7 +151,7 @@ function calcClusterCapacityAndUsage(cluster: Cluster): Cluster {
     return cluster
 }
 
-export function calcClusterUtilization(cluster: Cluster): Cluster {
+function calcClusterUtilization(cluster: Cluster): Cluster {
     cluster.ramUtilization = (cluster.ramUsage / cluster.ramCapacity) * 100;
     cluster.cpuUtilization = (cluster.cpuUsage / cluster.cpuCapacity) * 100;
     cluster.hardUtilization = (cluster.hardUsage / cluster.hardCapacity) * 100;
@@ -159,7 +159,7 @@ export function calcClusterUtilization(cluster: Cluster): Cluster {
     return cluster;
 }
 
-export function calcClusterLoad(cluster: Cluster): Cluster {
+function calcClusterLoad(cluster: Cluster): Cluster {
     if (cluster.hardUtilization >= 100) {
         cluster.load = 100;
     } else {
@@ -168,7 +168,7 @@ export function calcClusterLoad(cluster: Cluster): Cluster {
     return cluster
 }
 
-export function fuzzifyCluster(cluster: Cluster): Cluster {
+function fuzzifyCluster(cluster: Cluster): Cluster {
     let load = cluster.load;
     let veryLow = 0;
     let low = 0;
@@ -201,7 +201,7 @@ export function fuzzifyCluster(cluster: Cluster): Cluster {
 
 // export function averageFuzzyLoad ()
 
-function calcServerFuzzyLoad(server: Server): fuzzyLoad {
+function calcServerFuzzyLoad(server: Server): Server {
     let load = server.load;
     let veryLow = 0;
     let low = 0;
@@ -227,11 +227,12 @@ function calcServerFuzzyLoad(server: Server): fuzzyLoad {
         veryHigh = 1;
     }
 
-    return [veryLow, low, medium, high, veryHigh]
+    server.fuzzyLoad = [veryLow, low, medium, high, veryHigh];
+    return server
 }
 
 
-export function calcFuzzyOutput(cluster: Cluster): Cluster {
+function calcFuzzyOutput(cluster: Cluster): Cluster {
     let averageLoad = cluster.fuzzyLoad;
     let servers = cluster.servers;
 
@@ -242,6 +243,7 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
 
         if (load[length - 1] === 1 && averageLoad[length - 1] === 0) {
             servers[i].fuzzyOutput = [1, 0, 0];
+            console.log(1);
         } else if (load[length - 1] === 0 && averageLoad[length - 1] === 1) {
             servers[i].fuzzyOutput = [0, 0, 1];
         } else if (load[length - 1] === 1 && averageLoad[length - 1] === 1) {
@@ -251,30 +253,39 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
         for (let j = 0; j < length - 1; j++) {
             if (load[j] === 1 && averageLoad[j] === 0) {
                 servers[i].fuzzyOutput = [1, 0, 0];
+                break;
+
 
             } else if (load[j] === 0 && averageLoad[j] === 1) {
                 servers[i].fuzzyOutput = [0, 0, 1];
+                break;
 
             } else if (load[j] === 1 && averageLoad[j] === 1) {
                 servers[i].fuzzyOutput = [0, 1, 0];
+                break;
 
             } else if (bZO(load[j]) && averageLoad[j] === 0 && averageLoad[j + 1] === 0) {
                 servers[i].fuzzyOutput = [1, 0, 0];
+                break;
 
             } else if (bZO(averageLoad[j]) && load[j] === 0 && load[j + 1] === 0) {
                 servers[i].fuzzyOutput = [0, 0, 1];
+                break;
 
             } else if (bZO(load[j]) && bZO(load[j + 1]) && averageLoad[j] === 0 && bZO(averageLoad[j + 1])) {
                 let s = 0;
                 let n = Math.min(load[j + 1], averageLoad[j + 1]);
                 let r = 1 - n;
                 servers[i].fuzzyOutput = [r, n, s];
+                break;
 
             } else if (load[j] === 0 && bZO(load[j + 1]) && bZO(averageLoad[j + 1]) && bZO(averageLoad[j])) {
+                console.log('hello');
                 let r = 0;
                 let n = Math.min(load[j + 1], averageLoad[j + 1]);
                 let s = 1 - n;
                 servers[i].fuzzyOutput = [r, n, s];
+                break;
 
             } else if (bZO(load[j]) && bZO(load[j + 1]) && bZO(averageLoad[j + 1]) && bZO(averageLoad[j])) {
                 if (load[j + 1] > averageLoad[j + 1]) {
@@ -282,12 +293,14 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
                     let n = Math.max(Math.min(averageLoad[j], load[j]), Math.min(averageLoad[j + 1], load[j + 1]));
                     let s = 1 - n;
                     servers[i].fuzzyOutput = [r, n, s];
+                    break;
 
                 } else if (load[j + 1] < averageLoad[j + 1]) {
                     let s = 0;
                     let n = Math.max(Math.min(averageLoad[j], load[j]), Math.min(averageLoad[j + 1], load[j + 1]));
                     let r = 1 - n;
                     servers[i].fuzzyOutput = [r, n, s];
+                    break;
 
                 } else {
                     servers[i].fuzzyOutput = [0, 1, 0];
@@ -299,33 +312,73 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
     return cluster;
 }
 
-export function calcOutput(cluster: Cluster): Cluster {
+function calcOutput(cluster: Cluster): Cluster {
+    cluster.status = Array(cluster.servers.length).fill(0);
     let servers = cluster.servers;
-    let rIndex = -1;
-    let sIndex = -1;
+    let maxSender = 0;
+    let maxReceiver = 0;
+    let senderIndex = 0;
+    let receiverIndex = 0;
     for (let i = 0; i < servers.length; i++) {
-        if (servers[i].fuzzyOutput[0] === 1) {
-            rIndex = i;
-            break;
+        servers[i].status = 0;
+        if (servers[i].fuzzyOutput[0] > maxReceiver) {
+            maxReceiver = servers[i].fuzzyOutput[0];
+            receiverIndex = i;
+        }
+        if (servers[i].fuzzyOutput[2] > maxSender) {
+            maxSender = servers[i].fuzzyOutput[2];
+            senderIndex = i;
         }
     }
-    for (let i = 0; i < servers.length; i++) {
-        if (servers[i].fuzzyOutput[2] === 1) {
-            sIndex = i;
-            break;
+    console.log(cluster)
+
+    if (maxSender < 0.5 || maxReceiver < 0.5) {
+        return cluster;
+    } else {
+
+        servers[senderIndex].status = 1;
+        servers[receiverIndex].status = -1
+
+        let clusterStatus: Array<status> = []
+
+        for (let i = 0; i < servers.length; i++) {
+            if (i === senderIndex) {
+                clusterStatus.push(1);
+            } else if (i === receiverIndex) {
+                clusterStatus.push(-1);
+            } else {
+                clusterStatus.push(0);
+            }
         }
-    }
-    if (rIndex === -1) {
-        console.log('no receiver')
-    }
-    if (sIndex === -1) {
-        console.log('no sender');
-    }
 
-    cluster.servers[rIndex].status = -1;
-    cluster.servers[sIndex].status = 1;
+        cluster.status = clusterStatus;
 
-    return cluster;
+        // for (let i = 0; i < servers.length; i++) {
+        //     if (servers[i].fuzzyOutput[0] === 1) {
+        //         rIndex = i;
+        //         break;
+        //     }
+        // }
+        // for (let i = 0; i < servers.length; i++) {
+        //     if (servers[i].fuzzyOutput[2] === 1) {
+        //         sIndex = i;
+        //         break;
+        //     }
+        // }
+        // if (rIndex === -1) {
+        //     console.log('no receiver')
+        // }
+        // if (sIndex === -1) {
+        //     console.log('no sender');
+        // }
+
+        // cluster.servers[rIndex].status = -1;
+        // cluster.servers[sIndex].status = 1;
+
+        cluster.servers = servers;
+
+        return cluster;
+    }
 }
 
 function bZO(input: number): boolean {
@@ -341,22 +394,39 @@ let cluster: Cluster = {
         {
             ramCapacity: 2000,
             cpuCapacity: 200,
-            hardCapacity: 500000
+            hardCapacity: 500000,
+            clients: []
         },
         {
             ramCapacity: 2000,
             cpuCapacity: 200,
-            hardCapacity: 500000
+            hardCapacity: 500000,
+            clients: []
         }, {
             ramCapacity: 2000,
             cpuCapacity: 200,
-            hardCapacity: 500000
+            hardCapacity: 500000,
+            clients: []
         }, {
             ramCapacity: 2000,
             cpuCapacity: 200,
-            hardCapacity: 500000
+            hardCapacity: 500000,
+            clients: []
         }
-    ]
+    ],
+    ramCapacity: 0,
+    cpuCapacity: 0,
+    hardCapacity: 0,
+
+    ramUsage: 0,
+    cpuUsage: 0,
+    hardUsage: 0,
+
+    ramUtilization: 0,
+    cpuUtilization: 0,
+    hardUtilization: 0,
+
+    status: []
 }
 
 let sampleClient: Client = {
@@ -379,8 +449,36 @@ function polulateCluster(cluster: Cluster): Cluster {
 }
 
 function start() {
-    cluster = polulateCluster(cluster);
+    polulateCluster(cluster);
     console.log(cluster);
+
+    for (let i = 0; i < cluster.servers.length; i++) {
+        calServerUtilization(cluster.servers[i]);
+        // cluster.servers[i] = calServerLoad(cluster.servers[i])
+        calServerLoad(cluster.servers[i]);
+        calcServerFuzzyLoad(cluster.servers[i]);
+    }
+    console.log(cluster);
+
+    calcClusterCapacityAndUsage(cluster);
+    console.log(cluster);
+
+    calcClusterUtilization(cluster);
+    console.log(cluster);
+
+    calcClusterLoad(cluster);
+    console.log(cluster);
+
+    fuzzifyCluster(cluster);
+    console.log(cluster);
+
+    calcFuzzyOutput(cluster);
+    console.log(cluster);
+
+    calcOutput(cluster);
+    console.log(cluster);
+
 }
 
-console.log(cluster)
+// console.log(cluster)
+// start();
