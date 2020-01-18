@@ -231,9 +231,9 @@ function calcServerFuzzyLoad(server: Server): fuzzyLoad {
 }
 
 
-export function calcFuzzyOutput(cluser: Cluster): Cluster {
-    let averageLoad = cluser.fuzzyLoad;
-    let servers = cluser.servers;
+export function calcFuzzyOutput(cluster: Cluster): Cluster {
+    let averageLoad = cluster.fuzzyLoad;
+    let servers = cluster.servers;
 
     for (let i = 0; i < servers.length; i++) {
         servers[i].fuzzyOutput = [0, 1, 0];
@@ -295,11 +295,37 @@ export function calcFuzzyOutput(cluser: Cluster): Cluster {
             }
         }
     }
-    return cluser;
+    cluster.servers = servers;
+    return cluster;
 }
 
-function calcOutput(cluster: Cluster) {
+export function calcOutput(cluster: Cluster): Cluster {
+    let servers = cluster.servers;
+    let rIndex = -1;
+    let sIndex = -1;
+    for(let i = 0; i < servers.length; i++) {
+        if (servers[i].fuzzyOutput[0] === 1) {
+            rIndex = i;
+            break;
+        }
+    }
+    for(let i = 0; i < servers.length; i++) {
+        if (servers[i].fuzzyOutput[2] === 1) {
+            sIndex = i;
+            break;
+        }
+    }
+    if (rIndex === -1) {
+        console.log('no receiver')
+    }
+    if (sIndex === -1) {
+        console.log('no sender');
+    }
 
+    cluster.servers[rIndex].status = -1;
+    cluster.servers[sIndex].status = 1;
+
+    return cluster;
 }
 
 function bZO(input: number): boolean {
