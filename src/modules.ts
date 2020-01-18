@@ -1,13 +1,42 @@
+import { getInterpolationArgsLength } from '@angular/compiler/src/render3/view/util';
+
 export interface Server {
     ramCapacity: number,
     cpuCapacity: number,
     hardCapacity: number,
+
     clients: Array<Client>
+
+    ramUsage: number,
+    cpuUsage: number,
+    hardUsage: number,
+
     ramUtilization: number,
     cpuUtilization: number,
     hardUtilization: number,
+
     load: number,
     fuzzyLoad: fuzzyLoad
+}
+
+export interface Cluster {
+    servers: Array<Server>,
+
+    ramCapacity: number,
+    cpuCapacity: number,
+    hardCapacity: number,
+
+    ramUsage: number,
+    cpuUsage: number,
+    hardUsage: number,
+
+    ramUtilization: number,
+    cpuUtilization: number,
+    hardUtilization: number,
+
+    load: number,
+    fuzzyLoad: fuzzyLoad
+
 }
 
 export interface Client {
@@ -24,7 +53,7 @@ export function addClient(client: Client, server: Server) {
 export type fuzzyLoad = [number, number, number, number, number]
 
 
-export function calUtilization(server: Server): Server {
+export function calServerUtilization(server: Server): Server {
     let totalRamUsage: number = 0;
     let totalCpuUsage: number = 0;
     let totalHardUsage: number = 0;
@@ -34,6 +63,10 @@ export function calUtilization(server: Server): Server {
         totalCpuUsage = totalCpuUsage + server.clients[i].cpuUsage;
         totalHardUsage = totalHardUsage + server.clients[i].hardUsage;
     }
+
+    server.ramUsage = totalRamUsage;
+    server.cpuUsage = totalCpuUsage;
+    server.hardUsage = totalHardUsage;
 
     server.ramUtilization = (totalRamUsage / server.ramCapacity) * 100
     server.cpuUtilization = (totalCpuUsage / server.cpuCapacity) * 100
@@ -52,7 +85,7 @@ export function calServerLoad(server: Server): Server {
 
 export function fuzzifyServer (inputs: Array<Server>): Array<Server> {
     for (let i = 0; i < inputs.length; i++) {
-        inputs[i].fuzzyLoad = calcFuzzyLoad(inputs[i])
+        inputs[i].fuzzyLoad = calcServerFuzzyLoad(inputs[i])
         // let load = inputs[i].load;
         // let veryLow = 0;
         // let low = 0;
@@ -84,7 +117,89 @@ export function fuzzifyServer (inputs: Array<Server>): Array<Server> {
     return inputs;
 }
 
-function calcFuzzyLoad (server: Server): fuzzyLoad {
+export function calcClusterCapacityAndUsage (cluster: Cluster): Cluster {
+    let servers = cluster.servers;
+
+    let totalRamUsage = 0;
+    let totalCpuUsage = 0;
+    let totalHardUsage = 0;
+
+    let totalRamCapacity = 0;
+    let totalCpuCapacity = 0;
+    let totalHardCapacity = 0;
+
+    for(let i = 0; i <= servers.length; i++) {
+        totalRamCapacity = totalRamCapacity + servers[i].ramCapacity;
+        totalCpuCapacity = totalCpuCapacity + servers[i].cpuCapacity;
+        totalHardCapacity = totalHardCapacity + servers[i].hardCapacity;
+
+        totalRamCapacity = totalRamUsage + servers[i].ramUsage;
+        totalCpuCapacity = totalCpuUsage + servers[i].cpuUsage;
+        totalHardUsage = totalHardUsage + servers[i].hardUsage;
+    }
+
+    cluster.ramCapacity = totalRamCapacity;
+    cluster.cpuCapacity = totalCpuCapacity;
+    cluster.hardCapacity = totalHardCapacity;
+
+    cluster.ramUsage = totalRamUsage;
+    cluster.cpuUsage = totalCpuUsage;
+    cluster.hardUsage = totalHardUsage;
+
+    return cluster
+}
+
+export function calcClusterUtilization (cluster: Cluster): Cluster {
+    cluster.ramUtilization = (cluster.ramUsage / cluster.ramCapacity) * 100;
+    cluster.cpuUtilization = (cluster.cpuUsage / cluster.cpuCapacity) * 100;
+    cluster.hardUtilization = (cluster.hardUsage / cluster.hardCapacity) * 100;
+
+    return cluster;
+}
+
+export function calcClusterLoad (cluster: Cluster): Cluster {
+    if (cluster.hardUtilization >= 100) {
+        cluster.load = 100;
+    } else {
+        cluster.load = Math.max(cluster.cpuUtilization, cluster.ramUtilization)
+    }
+    return cluster
+}
+
+export function fuzzifyCluster (cluster: Cluster): Cluster {
+    let load = cluster.load;
+    let veryLow = 0;
+    let low = 0;
+    let medium = 0;
+    let high = 0;
+    let veryHigh = 0;
+
+    if (load <= 10) {
+        veryLow = 1;
+    } else if (load > 10 && load <= 30) {
+        veryLow = (30 - load) / 20;
+        low = (load - 10) / 20;
+    } else if (load > 30 && load <= 50) {
+        low = (50 - load) / 20;
+        medium = (load - 30) / 20;
+    } else if (load > 50 && load <= 70) {
+        medium = (70 - load) / 20;
+        high = (load - 50) / 20;
+    } else if (load > 70 && load <= 90) {
+        high = (90 - load) / 20;
+        veryHigh = (load - 70) / 20;
+    } else if (load > 90) {
+        veryHigh = 1;
+    }
+
+    cluster.fuzzyLoad = [veryLow, low, medium, high, veryHigh]
+
+    return cluster
+}
+
+// export function averageFuzzyLoad ()
+
+function calcServerFuzzyLoad (server: Server): fuzzyLoad {
     let load = server.load;
     let veryLow = 0;
     let low = 0;
@@ -111,4 +226,11 @@ function calcFuzzyLoad (server: Server): fuzzyLoad {
     }
 
     return [veryLow, low, medium, high, veryHigh]
+}
+
+
+function calcFuzzyOutput (server: Array<Server>) {
+    for (let i = 0; i <= server.length; i++) {
+
+    }
 }
