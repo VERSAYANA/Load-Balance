@@ -15,9 +15,9 @@ interface Server {
     hardUtilization?: number,
 
     load?: number,
-    fuzzyLoad?: fuzzyLoad
-    fuzzyOutput?: fuzzyOutput
-    status?: status
+    fuzzyLoad?: fuzzyLoad,
+    fuzzyOutput?: fuzzyOutput,
+    status?: status,
 }
 
 interface Cluster {
@@ -36,8 +36,12 @@ interface Cluster {
     hardUtilization?: number,
 
     load?: number,
-    fuzzyLoad?: fuzzyLoad
-    status?: Array<status>
+    fuzzyLoad?: fuzzyLoad,
+    status?: Array<status>,
+    active?: boolean,
+    senderIndex?: number,
+    receiverIndex?: number
+
 }
 
 interface Client {
@@ -313,6 +317,7 @@ function calcFuzzyOutput(cluster: Cluster): Cluster {
 }
 
 function calcOutput(cluster: Cluster): Cluster {
+    cluster.active = false;
     cluster.status = Array(cluster.servers.length).fill(0);
     let servers = cluster.servers;
     let maxSender = 0;
@@ -338,6 +343,9 @@ function calcOutput(cluster: Cluster): Cluster {
 
         servers[senderIndex].status = 1;
         servers[receiverIndex].status = -1
+        cluster.senderIndex = senderIndex;
+        cluster.receiverIndex = receiverIndex;
+        cluster.active = true;
 
         let clusterStatus: Array<status> = []
 
@@ -350,6 +358,8 @@ function calcOutput(cluster: Cluster): Cluster {
                 clusterStatus.push(0);
             }
         }
+
+
 
         cluster.status = clusterStatus;
 
@@ -478,7 +488,13 @@ function start() {
     calcOutput(cluster);
     console.log(cluster);
 
+    if (cluster.active) {
+        addClient(cluster.servers[cluster.senderIndex].clients.pop(), cluster.servers[cluster.receiverIndex]);
+    }
+
+    console.log(cluster);
+
 }
 
 // console.log(cluster)
-// start();
+start();
