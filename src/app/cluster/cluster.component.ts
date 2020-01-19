@@ -39,5 +39,8 @@ export class ClusterComponent implements OnInit {
       console.log(result);
     })
   }
+  ngOnDestroy() {
+    this.clusterInfo.unsubscribe();
+  }
 
 }
