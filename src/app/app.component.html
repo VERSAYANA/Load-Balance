@@ -43,7 +43,6 @@
     <span class="menu-spacer"></span>
     <div>
       <!-- <button mat-button color="primary">Primary</button> -->
-
     </div>
   </mat-toolbar-row>
 
@@ -65,16 +64,21 @@
        </a
       > -->
       <a (click)="openDialog()" class="add-cluster" mat-list-item>
-          <mat-icon color="primary">add</mat-icon>
-          <span color="primary">Create New Cluster</span>
+        <mat-icon color="primary">add</mat-icon>
+        <span color="primary">Create New Cluster</span>
       </a>
-      <a mat-list-item [routerLink]="'/accounts'"> New York </a>
+      <a
+        *ngFor="let cluster of clustersInfo | async"
+        mat-list-item
+        [routerLink]="'clusters/'+cluster.id"
+        >{{ cluster.name }}</a
+      >
+      <!-- <a mat-list-item [routerLink]="'/accounts'"> New York </a>
       <a mat-list-item [routerLink]="'/create-account'"> Paris </a>
       <a mat-list-item [routerLink]="'/contacts'"> Tehran </a>
       <a mat-list-item [routerLink]="'/create-contact'"> Toronto </a>
       <a mat-list-item [routerLink]="'/activities'"> Sydney </a>
-      <a mat-list-item [routerLink]="'/create-activity'"> Frankfurt </a>
-
+      <a mat-list-item [routerLink]="'/create-activity'"> Frankfurt </a> -->
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

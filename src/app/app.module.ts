@@ -16,9 +16,12 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatDialogModule} from '@angular/material/dialog';
-import { CreateClusterModalComponent } from './modals/create-cluster-modal/create-cluster-modal.component';
+import { CreateClusterModalComponent } from '../modals/create-cluster-modal/create-cluster-modal.component';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ClusterService } from 'src/services/cluster.service';
+
 
 
 
@@ -33,6 +36,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatSliderModule,
@@ -43,11 +47,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatListModule,
     MatDialogModule,
     MatInputModule,
-    MatFormFieldModule
-    
+    MatFormFieldModule,    
   ],
   entryComponents: [AppComponent, CreateClusterModalComponent],
-  providers: [],
+  providers: [ClusterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

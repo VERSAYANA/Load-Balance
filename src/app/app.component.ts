@@ -4,7 +4,7 @@ import { Observable, from } from 'rxjs';
 import { Cluster } from '../modules';
 // import { worker } from 'cluster';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { CreateClusterModalComponent } from './modals/create-cluster-modal/create-cluster-modal.component';
+import { CreateClusterModalComponent } from '../modals/create-cluster-modal/create-cluster-modal.component';
 
 
 const newData = {
@@ -884,6 +884,7 @@ const worker = new Worker('./app.worker', { type: 'module' });
 })
 export class AppComponent {
   clusters: Observable<any>;
+  clustersInfo
   constructor(private db: AngularFireDatabase, public dialog: MatDialog) {
 
     worker.onmessage = ({ data }) => {
@@ -892,7 +893,10 @@ export class AppComponent {
 
 
 
-
+    this.clustersInfo = db.list('clustersInfo').valueChanges();
+    this.clustersInfo.subscribe(data => {
+      console.log(data);
+    })
     this.clusters = db.object('clusters/0').valueChanges();
     this.clusters.subscribe(data => {
       // console.log(data);
