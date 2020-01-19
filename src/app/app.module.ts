@@ -17,6 +17,9 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {MatDialogModule} from '@angular/material/dialog';
 import { CreateClusterModalComponent } from './modals/create-cluster-modal/create-cluster-modal.component';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+
 
 
 
@@ -38,9 +41,12 @@ import { CreateClusterModalComponent } from './modals/create-cluster-modal/creat
     MatButtonModule,
     MatSidenavModule,
     MatListModule,
-    MatDialogModule
+    MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule
     
   ],
+  entryComponents: [AppComponent, CreateClusterModalComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

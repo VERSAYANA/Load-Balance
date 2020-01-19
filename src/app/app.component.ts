@@ -3,6 +3,9 @@ import { AngularFireDatabase } from '@angular/fire/database';
 import { Observable, from } from 'rxjs';
 import { Cluster } from '../modules';
 // import { worker } from 'cluster';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { CreateClusterModalComponent } from './modals/create-cluster-modal/create-cluster-modal.component';
+
 
 const newData = {
   "servers": [
@@ -881,7 +884,7 @@ const worker = new Worker('./app.worker', { type: 'module' });
 })
 export class AppComponent {
   clusters: Observable<any>;
-  constructor(private db: AngularFireDatabase) {
+  constructor(private db: AngularFireDatabase, public dialog: MatDialog) {
 
     worker.onmessage = ({ data }) => {
       // this.db.object('clusters/0').set(data)
@@ -889,17 +892,32 @@ export class AppComponent {
 
 
 
+
     this.clusters = db.object('clusters/0').valueChanges();
     this.clusters.subscribe(data => {
       // console.log(data);
       // worker.postMessage(data)
-    })
+    });
   }
   title = 'social-media';
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(CreateClusterModalComponent, {
+      // width: '500px',
+      data: {name: 'hello'}
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    })
+  }
 
   update() {
     this.db.object('clusters/0').set(newData)
   }
+  // openDialog() {
+  //   console.log('j');
+  // }
 }
 
 // function  cl (cluster: Cluster) {
