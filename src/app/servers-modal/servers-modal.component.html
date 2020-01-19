@@ -21,6 +21,7 @@
         max="64"
         matInput
         placeholder="Number of CPU cores"
+        required
       />
       <!-- <span matSuffix>miliseconds</span> -->
     </mat-form-field>
@@ -33,6 +34,7 @@
         max="64000"
         matInput
         placeholder="Ram capacity"
+        required
       />
       <span matSuffix>MB</span>
     </mat-form-field>
@@ -45,18 +47,20 @@
         max="100000"
         matInput
         placeholder="Hard capacity"
+        required
       />
       <span matSuffix>GB</span>
     </mat-form-field>
-
-    <button (click)="onCancel()" type="button" mat-button>Cancel</button>
-    <button
-      [disabled]="serverForm.invalid"
-      type="submit"
-      mat-raised-button
-      color="primary"
-    >
-      {{type}}
-    </button>
+    <div class="buttons-container">
+      <button (click)="onCancel()" type="button" mat-button>Cancel</button>
+      <button
+        [disabled]="serverForm.invalid"
+        type="submit"
+        mat-raised-button
+        color="primary"
+      >
+        {{ type }}
+      </button>
+    </div>
   </form>
 </div>

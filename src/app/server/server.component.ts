@@ -7,6 +7,7 @@ import {
 } from "@angular/material/dialog";
 import { CreateClusterModalComponent } from "src/modals/create-cluster-modal/create-cluster-modal.component";
 import { ServersModalComponent } from "../servers-modal/servers-modal.component";
+import { ClientsModalComponent } from "../clients-modal/clients-modal.component";
 
 @Component({
   selector: "app-server",
@@ -15,7 +16,7 @@ import { ServersModalComponent } from "../servers-modal/servers-modal.component"
 })
 export class ServerComponent implements OnInit {
   @Input() id: string;
-  @Input() info: object;
+  @Input() info;
   @Input() clusterId: string;
   constructor(public dialog: MatDialog) {}
 
@@ -35,5 +36,30 @@ export class ServerComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
     });
+  }
+  addOrRemoveClient() {
+    let clients = {};
+    if (this.info.hasOwnProperty("clients")) {
+      clients = this.info.clients;
+    }
+    const dialogRef = this.dialog.open(ClientsModalComponent, {
+      // width: '500px',
+      data: {
+        serverId: this.id,
+        clusterId: this.clusterId,
+        clients: clients
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+    });
+  }
+  calcNumberOfClients() {
+    if (this.info.hasOwnProperty("clients")) {
+      return Object.keys(this.info.clients).length;
+    } else {
+      return 0;
+    }
   }
 }
