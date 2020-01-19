@@ -15,29 +15,33 @@ interface NewCluster {
 }
 
 @Component({
-  selector: "app-create-cluster-modal",
-  templateUrl: "./create-cluster-modal.component.html",
-  styleUrls: ["./create-cluster-modal.component.scss"]
+  selector: "app-update-cluster",
+  templateUrl: "./update-cluster.component.html",
+  styleUrls: ["./update-cluster.component.scss"]
 })
-export class CreateClusterModalComponent implements OnInit {
+export class UpdateClusterComponent implements OnInit {
   createClusterForm;
   sens = 0.5;
   delay = 50;
-  type: string;
-  id: string;
-  name: string;
+  type: string
+  id: string
+  name: string
+
   constructor(
     private db: AngularFireDatabase,
     private formBuilder: FormBuilder,
     // private clusterService: ClusterService,
-    public dialogRef: MatDialogRef<CreateClusterModalComponent>,
+    public dialogRef: MatDialogRef<UpdateClusterComponent>,
     @Inject(MAT_DIALOG_DATA) public data
-  ) {}
+  ) {
+    this.createClusterForm = this.formBuilder.group({
+      name: ["", Validators.required]
+    });
+  }
 
   onCancel(): void {
     this.dialogRef.close();
   }
-
   createCluster(data: NewCluster) {
     let pushId = this.db.createPushId();
     this.db.list("clustersInfo").set(pushId, {
@@ -52,50 +56,26 @@ export class CreateClusterModalComponent implements OnInit {
     });
   }
 
-  updateCluster(data) {
-    this.db.object(`clustersInfo/${this.data.id}`).update({
-      name: data.name
-    });
-    this.db.object(`clusters/${this.data.id}`).update({
-      name: data.name,
-      sens: data.sens,
-      delay: data.delay
-    });
-  }
-
   onSubmit(clusterData) {
-    if (this.data.type === "Update") {
-      this.updateCluster({
-        name: clusterData.name,
-        sens: this.sens,
-        delay: this.delay
-      });
-    } else if (this.data.type === "Create") {
-      this.createCluster({
-        name: clusterData.name,
-        sens: this.sens,
-        delay: this.delay
-      });
-    }
-
+    console.log(clusterData);
+    console.log(this.delay, this.sens);
+    this.createCluster({
+      name: clusterData.name,
+      sens: this.sens,
+      delay: this.delay
+    });
     this.dialogRef.close();
   }
 
   ngOnInit() {
     console.log(this.data);
-    if (this.data.type == "Update") {
-      console.log(this.data);
+    if(this.data.type = 'Update') {
+      console.log(this.data)
       this.type = this.data.type;
       this.sens = this.data.sens;
       this.delay = this.data.delay;
       this.id = this.data.id;
-      this.name = this.data.name;
-    } else if (this.data.type === "Create") {
-      this.type = this.data.type;
-      this.name = "";
+      this.name = this.data.name
     }
-    this.createClusterForm = this.formBuilder.group({
-      name: [this.name, Validators.required]
-    });
   }
 }

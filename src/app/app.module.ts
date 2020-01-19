@@ -20,7 +20,10 @@ import { CreateClusterModalComponent } from '../modals/create-cluster-modal/crea
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ClusterService } from 'src/services/cluster.service';
+// import { ClusterService } from 'src/services/cluster.service';
+import { ClusterComponent } from './cluster/cluster.component';
+import { RouterModule } from '@angular/router';
+import { UpdateClusterComponent } from './update-cluster/update-cluster.component';
 
 
 
@@ -30,7 +33,9 @@ import { ClusterService } from 'src/services/cluster.service';
 @NgModule({
   declarations: [
     AppComponent,
-    CreateClusterModalComponent
+    CreateClusterModalComponent,
+    ClusterComponent,
+    UpdateClusterComponent
   ],
   imports: [
     BrowserModule,
@@ -38,6 +43,10 @@ import { ClusterService } from 'src/services/cluster.service';
     AngularFireDatabaseModule,
     ReactiveFormsModule,
     AppRoutingModule,
+    RouterModule.forRoot([
+      // { path: '', component: ProductListComponent },
+      { path: 'clusters/:clusterId', component: ClusterComponent },
+    ]),
     BrowserAnimationsModule,
     MatSliderModule,
     MatToolbarModule,
@@ -49,8 +58,8 @@ import { ClusterService } from 'src/services/cluster.service';
     MatInputModule,
     MatFormFieldModule,    
   ],
-  entryComponents: [AppComponent, CreateClusterModalComponent],
-  providers: [ClusterService],
+  entryComponents: [AppComponent, CreateClusterModalComponent, ClusterComponent, UpdateClusterComponent],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

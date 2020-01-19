@@ -908,7 +908,7 @@ export class AppComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open(CreateClusterModalComponent, {
       // width: '500px',
-      data: {name: 'hello'}
+      data: {type: 'Create'}
     })
 
     dialogRef.afterClosed().subscribe(result => {

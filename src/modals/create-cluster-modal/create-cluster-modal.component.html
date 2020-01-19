@@ -2,7 +2,7 @@
   <h3>Create A New Cluster</h3>
   <form  [formGroup]="createClusterForm" (ngSubmit)="onSubmit(createClusterForm.value)">
     <mat-form-field>
-      <input formControlName="name" required type="text" matInput maxlength="24" placeholder="Cluster name" />
+      <input formControlName="name" [(value)]="name" required type="text" matInput maxlength="24" placeholder="Cluster name" />
       <!-- <mat-hint>{{message.value.length}} / 24</mat-hint> -->
     </mat-form-field>
 
@@ -18,7 +18,7 @@
     </mat-form-field> -->
     <div class="buttons">
       <button (click)="onCancel()" type="button" mat-button>Cancel</button>
-      <button [disabled]="createClusterForm.invalid" type="submit" mat-raised-button color="primary">Create</button>
+      <button [disabled]="createClusterForm.invalid" type="submit" mat-raised-button color="primary">{{type}}</button>
     </div>
 
   </form>

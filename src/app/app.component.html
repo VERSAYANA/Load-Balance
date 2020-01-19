@@ -71,6 +71,7 @@
         *ngFor="let cluster of clustersInfo | async"
         mat-list-item
         [routerLink]="'clusters/'+cluster.id"
+        routerLinkActive="active-route"
         >{{ cluster.name }}</a
       >
       <!-- <a mat-list-item [routerLink]="'/accounts'"> New York </a>
