@@ -24,6 +24,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ClusterComponent } from './cluster/cluster.component';
 import { RouterModule } from '@angular/router';
 import { UpdateClusterComponent } from './update-cluster/update-cluster.component';
+import { ServersModalComponent } from './servers-modal/servers-modal.component';
 
 
 
@@ -35,7 +36,8 @@ import { UpdateClusterComponent } from './update-cluster/update-cluster.componen
     AppComponent,
     CreateClusterModalComponent,
     ClusterComponent,
-    UpdateClusterComponent
+    UpdateClusterComponent,
+    ServersModalComponent
   ],
   imports: [
     BrowserModule,
@@ -58,7 +60,7 @@ import { UpdateClusterComponent } from './update-cluster/update-cluster.componen
     MatInputModule,
     MatFormFieldModule,    
   ],
-  entryComponents: [AppComponent, CreateClusterModalComponent, ClusterComponent, UpdateClusterComponent],
+  entryComponents: [AppComponent, ServersModalComponent, CreateClusterModalComponent, ClusterComponent, UpdateClusterComponent],
   providers: [],
   bootstrap: [AppComponent]
 })
