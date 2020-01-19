@@ -1,19 +1,22 @@
 <div class="container">
   <div class="settings-container">
-    <button
-      mat-icon-button
-      color="primary"
-      (click)="updateCluster()"
-    >
+    <button mat-icon-button color="primary" (click)="updateCluster()">
       <mat-icon>settings</mat-icon>
     </button>
 
-    <button
-      mat-icon-button
-      color="primary"
-      (click)="addServer()"
-    >
+    <button mat-icon-button color="primary" (click)="addServer()">
       <mat-icon>add</mat-icon>
     </button>
+  </div>
+  <div>
+    <!-- <p *ngFor="let server of clusterData?.servers | keyvalue"> -->
+    <!-- {{ server.key }} - {{ server.value.ram }}
+    </p> -->
+    <app-server
+      *ngFor="let server of clusterData?.servers | keyvalue"
+      [id]="server.key"
+      [info]="server.value"
+      [clusterId]="clusterId"
+    ></app-server>
   </div>
 </div>

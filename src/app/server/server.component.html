@@ -1,0 +1,23 @@
+<mat-card class="card">
+  <div class="top">
+
+    <button mat-icon-button color="primary">
+      <mat-icon>add</mat-icon>
+    </button>
+   
+    <button (click)="modifyServer()" mat-icon-button color="primary">
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
+
+  <div class="computer">
+    <span>{{info.name}}</span>
+    <mat-icon>computer</mat-icon>
+  </div>
+
+  <div class="details">
+    <span>{{info.ram}}MB</span>
+    <span>{{info.cpu / 100}} Cores</span>
+    <span>{{info.hard / 1000}}GB</span>
+  </div>
+</mat-card>

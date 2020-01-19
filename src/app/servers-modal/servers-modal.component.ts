@@ -13,7 +13,8 @@ import { FormBuilder, Validators } from "@angular/forms";
   styleUrls: ["./servers-modal.component.scss"]
 })
 export class ServersModalComponent implements OnInit {
-  serverForm
+  serverForm;
+  type
   constructor(
     private db: AngularFireDatabase,
     private formBuilder: FormBuilder,
@@ -23,31 +24,56 @@ export class ServersModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.type = this.receivedData.type
+    let name;
+    let ram;
+    let cpu;
+    let hard;
+    if (this.receivedData.type === "Modify") {
+      name = this.receivedData.info.name;
+      ram = this.receivedData.info.ram;
+      cpu = this.receivedData.info.cpu / 100;
+      hard = this.receivedData.info.hard / 1000;
+      // this.serverId
+    } else {
+      name = "";
+      ram = 8000;
+      cpu = 4;
+      hard = 1000;
+    }
     this.serverForm = this.formBuilder.group({
-      name: ["", Validators.required],
-      ram: [8000, Validators.required],
-      cpu: [4, Validators.required],
-      hard: [1000, Validators.required],
-
-
-    })
+      name: [name, Validators.required],
+      ram: [ram, Validators.required],
+      cpu: [cpu, Validators.required],
+      hard: [hard, Validators.required]
+    });
   }
 
   onSubmit(formData) {
     console.log(formData, this.receivedData.clusterId);
-    this.addServer({
+    const data = {
       name: formData.name,
       ram: formData.ram,
       cpu: formData.cpu * 100,
-      hard: formData.hard * 1000,
-    })
+      hard: formData.hard * 1000
+    };
+    if (this.receivedData.type === "Modify") {
+      this.modifyServer(data);
+    } else {
+      this.addServer(data);
+    }
+    this.dialogRef.close();
   }
 
   addServer(data) {
-    this.db.list(`clusters/${this.receivedData.clusterId}/servers`).push(data)
+    this.db.list(`clusters/${this.receivedData.clusterId}/servers`).push(data);
   }
-  modifyServer(){
-
+  modifyServer(data) {
+    this.db
+      .object(
+        `clusters/${this.receivedData.clusterId}/servers/${this.receivedData.serverId}`
+      )
+      .update(data);
   }
 
   onCancel(): void {

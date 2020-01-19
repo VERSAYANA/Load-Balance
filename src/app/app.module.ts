@@ -25,6 +25,9 @@ import { ClusterComponent } from './cluster/cluster.component';
 import { RouterModule } from '@angular/router';
 import { UpdateClusterComponent } from './update-cluster/update-cluster.component';
 import { ServersModalComponent } from './servers-modal/servers-modal.component';
+import { ServerComponent } from './server/server.component';
+import {MatCardModule} from '@angular/material/card';
+
 
 
 
@@ -37,7 +40,8 @@ import { ServersModalComponent } from './servers-modal/servers-modal.component';
     CreateClusterModalComponent,
     ClusterComponent,
     UpdateClusterComponent,
-    ServersModalComponent
+    ServersModalComponent,
+    ServerComponent
   ],
   imports: [
     BrowserModule,
@@ -59,6 +63,7 @@ import { ServersModalComponent } from './servers-modal/servers-modal.component';
     MatDialogModule,
     MatInputModule,
     MatFormFieldModule,    
+    MatCardModule
   ],
   entryComponents: [AppComponent, ServersModalComponent, CreateClusterModalComponent, ClusterComponent, UpdateClusterComponent],
   providers: [],
