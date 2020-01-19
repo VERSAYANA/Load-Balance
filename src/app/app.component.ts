@@ -884,7 +884,7 @@ export class AppComponent {
   constructor(private db: AngularFireDatabase) {
 
     worker.onmessage = ({ data }) => {
-      this.db.object('clusters/0').set(data)
+      // this.db.object('clusters/0').set(data)
     };
 
 
@@ -892,7 +892,7 @@ export class AppComponent {
     this.clusters = db.object('clusters/0').valueChanges();
     this.clusters.subscribe(data => {
       // console.log(data);
-      worker.postMessage(data)
+      // worker.postMessage(data)
     })
   }
   title = 'social-media';
