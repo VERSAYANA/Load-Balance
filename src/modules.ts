@@ -1,5 +1,5 @@
 
-interface Server {
+export interface Server {
     ramCapacity: number,
     cpuCapacity: number,
     hardCapacity: number,
@@ -20,7 +20,7 @@ interface Server {
     status?: status,
 }
 
-interface Cluster {
+export interface Cluster {
     servers: Array<Server>,
 
     ramCapacity?: number,
@@ -44,13 +44,13 @@ interface Cluster {
 
 }
 
-interface Client {
+export interface Client {
     ramUsage: number,
     cpuUsage: number,
     hardUsage: number
 }
 
-function addClient(client: Client, server: Server) {
+export function addClient(client: Client, server: Server) {
     server.clients.push(client)
     return server
 }
@@ -59,7 +59,8 @@ type fuzzyLoad = [number, number, number, number, number];
 type fuzzyOutput = [number, number, number];
 type status = -1 | 0 | 1;
 
-function calServerUtilization(server: Server): Server {
+export function calServerUtilization(server: Server): Server {
+    // console.log(server);
     let totalRamUsage: number = 0;
     let totalCpuUsage: number = 0;
     let totalHardUsage: number = 0;
@@ -80,7 +81,7 @@ function calServerUtilization(server: Server): Server {
     return server
 }
 
-function calServerLoad(server: Server): Server {
+export function calServerLoad(server: Server): Server {
     if (server.hardUtilization >= 100) {
         server.load = 100;
     } else {
@@ -123,7 +124,7 @@ function calServerLoad(server: Server): Server {
 //     return inputs;
 // }
 
-function calcClusterCapacityAndUsage(cluster: Cluster): Cluster {
+export function calcClusterCapacityAndUsage(cluster: Cluster): Cluster {
     let servers = cluster.servers;
 
     let totalRamUsage = 0;
@@ -155,7 +156,7 @@ function calcClusterCapacityAndUsage(cluster: Cluster): Cluster {
     return cluster
 }
 
-function calcClusterUtilization(cluster: Cluster): Cluster {
+export function calcClusterUtilization(cluster: Cluster): Cluster {
     cluster.ramUtilization = (cluster.ramUsage / cluster.ramCapacity) * 100;
     cluster.cpuUtilization = (cluster.cpuUsage / cluster.cpuCapacity) * 100;
     cluster.hardUtilization = (cluster.hardUsage / cluster.hardCapacity) * 100;
@@ -163,7 +164,7 @@ function calcClusterUtilization(cluster: Cluster): Cluster {
     return cluster;
 }
 
-function calcClusterLoad(cluster: Cluster): Cluster {
+export function calcClusterLoad(cluster: Cluster): Cluster {
     if (cluster.hardUtilization >= 100) {
         cluster.load = 100;
     } else {
@@ -172,7 +173,7 @@ function calcClusterLoad(cluster: Cluster): Cluster {
     return cluster
 }
 
-function fuzzifyCluster(cluster: Cluster): Cluster {
+export function fuzzifyCluster(cluster: Cluster): Cluster {
     let load = cluster.load;
     let veryLow = 0;
     let low = 0;
@@ -205,7 +206,7 @@ function fuzzifyCluster(cluster: Cluster): Cluster {
 
 // export function averageFuzzyLoad ()
 
-function calcServerFuzzyLoad(server: Server): Server {
+export function calcServerFuzzyLoad(server: Server): Server {
     let load = server.load;
     let veryLow = 0;
     let low = 0;
@@ -236,7 +237,7 @@ function calcServerFuzzyLoad(server: Server): Server {
 }
 
 
-function calcFuzzyOutput(cluster: Cluster): Cluster {
+export function calcFuzzyOutput(cluster: Cluster): Cluster {
     let averageLoad = cluster.fuzzyLoad;
     let servers = cluster.servers;
 
@@ -316,7 +317,7 @@ function calcFuzzyOutput(cluster: Cluster): Cluster {
     return cluster;
 }
 
-function calcOutput(cluster: Cluster): Cluster {
+export function calcOutput(cluster: Cluster): Cluster {
     cluster.active = false;
     cluster.status = Array(cluster.servers.length).fill(0);
     let servers = cluster.servers;
@@ -337,7 +338,7 @@ function calcOutput(cluster: Cluster): Cluster {
     }
     console.log(cluster)
 
-    if (maxSender < 0.5 || maxReceiver < 0.5) {
+    if (maxSender < 0.1 || maxReceiver < 0.1) {
         return cluster;
     } else {
 
@@ -391,7 +392,7 @@ function calcOutput(cluster: Cluster): Cluster {
     }
 }
 
-function bZO(input: number): boolean {
+export function bZO(input: number): boolean {
     if (input > 0 && input < 1) {
         return true
     } else {
@@ -497,4 +498,4 @@ function start() {
 }
 
 // console.log(cluster)
-start();
+// start();
