@@ -15,14 +15,16 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
-
+import {MatDialogModule} from '@angular/material/dialog';
+import { CreateClusterModalComponent } from './modals/create-cluster-modal/create-cluster-modal.component';
 
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CreateClusterModalComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +37,8 @@ import {MatListModule} from '@angular/material/list';
     MatIconModule,
     MatButtonModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    MatDialogModule
     
   ],
   providers: [],
