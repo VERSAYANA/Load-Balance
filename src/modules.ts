@@ -330,7 +330,7 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
 
     if (load[length - 1] === 1 && averageLoad[length - 1] === 0) {
       servers[key].fuzzyOutput = [1, 0, 0];
-      console.log(1);
+      // console.log(1);
     } else if (load[length - 1] === 0 && averageLoad[length - 1] === 1) {
       servers[key].fuzzyOutput = [0, 0, 1];
     } else if (load[length - 1] === 1 && averageLoad[length - 1] === 1) {
@@ -568,15 +568,15 @@ export function calcOutput(cluster: Cluster): Cluster {
   //       senderIndex = i;
   //     }
   //   }
-  console.log(cluster);
+  // console.log(cluster);
 
   if (
     maxSender < 1 - cluster.sens &&
     maxReceiver < 1 - cluster.sens
     //  ||(maxSender + maxReceiver) < 1
   ) {
-    console.log(maxSender + maxReceiver);
-    console.log("hello");
+    // console.log(maxSender + maxReceiver);
+    // console.log("hello");
     return cluster;
   } else {
     // if (typeof Worker !== 'undefined')

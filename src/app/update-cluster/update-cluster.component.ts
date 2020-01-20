@@ -57,8 +57,8 @@ export class UpdateClusterComponent implements OnInit {
   }
 
   onSubmit(clusterData) {
-    console.log(clusterData);
-    console.log(this.delay, this.sens);
+    // console.log(clusterData);
+    // console.log(this.delay, this.sens);
     this.createCluster({
       name: clusterData.name,
       sens: this.sens,
@@ -68,9 +68,9 @@ export class UpdateClusterComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data);
+    // console.log(this.data);
     if(this.data.type = 'Update') {
-      console.log(this.data)
+      // console.log(this.data)
       this.type = this.data.type;
       this.sens = this.data.sens;
       this.delay = this.data.delay;

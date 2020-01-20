@@ -88,7 +88,7 @@ export class ServerComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+      // console.log(result);
     });
   }
   calcNumberOfClients() {
@@ -99,11 +99,11 @@ export class ServerComponent implements OnInit {
     }
   }
   deleteServer() {
-    console.log(`clusters/${this.clusterId}/${this.id}`)
+    // console.log(`clusters/${this.clusterId}/${this.id}`)
     this.db.object(`clusters/${this.clusterId}/servers/${this.id}`).remove();
   }
   status(s) {
-    console.log(s === this.info.status);
+    // console.log(s === this.info.status);
     if (s === this.info.status) {
       return true;
     }

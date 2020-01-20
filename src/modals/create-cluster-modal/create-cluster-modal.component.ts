@@ -88,9 +88,9 @@ export class CreateClusterModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data);
+    // console.log(this.data);
     if (this.data.type == "Update") {
-      console.log(this.data);
+      // console.log(this.data);
       this.type = this.data.type;
       this.sens = this.data.sens;
       this.delay = this.data.delay;
