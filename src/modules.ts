@@ -58,9 +58,9 @@ export function addClient(client: Client, server: Server) {
   return server;
 }
 
-for (let key in this.clusterData.servers) {
-  console.log(key, this.clusterData.servers[key]);
-}
+// for (let key in this.clusterData.servers) {
+//   console.log(key, this.clusterData.servers[key]);
+// }
 
 type fuzzyLoad = [number, number, number, number, number];
 type fuzzyOutput = [number, number, number];

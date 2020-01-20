@@ -875,7 +875,7 @@ const newData = {
   "status": []
 }
 
-const worker = new Worker('./app.worker', { type: 'module' });
+// const worker = new Worker('./app.worker', { type: 'module' });
 
 @Component({
   selector: 'app-root',
@@ -887,9 +887,9 @@ export class AppComponent {
   clustersInfo
   constructor(private db: AngularFireDatabase, public dialog: MatDialog) {
 
-    worker.onmessage = ({ data }) => {
+    // worker.onmessage = ({ data }) => {
       // this.db.object('clusters/0').set(data)
-    };
+    // };
 
 
 
