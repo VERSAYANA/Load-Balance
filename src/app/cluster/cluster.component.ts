@@ -37,7 +37,9 @@ export class ClusterComponent implements OnInit {
         .valueChanges();
       this.clusterInfo.subscribe(data => {
         this.clusterData = data;
-        worker.postMessage(data);
+        if (data.active) {
+          worker.postMessage(data);
+        }
         // console.log(this.clusterData)
         // console.log(...this.clusterData.servers)
         // console.log(typeof this.clusterData.servers)

@@ -22,7 +22,7 @@ export interface Server {
 export interface Cluster {
   servers: Array<Server>;
 
-  delay: number
+  delay: number;
 
   ramCapacity?: number;
   cpuCapacity?: number;
@@ -304,23 +304,34 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
         servers[key].fuzzyOutput = [0, 0, 1];
         break;
       } else if (
-        bZO(load[j]) &&
-        bZO(load[j + 1]) &&
-        averageLoad[j] === 0 &&
-        bZO(averageLoad[j + 1])
+        //   bZO(load[j]) &&
+        //   bZO(load[j + 1]) &&
+        //   averageLoad[j] === 0 &&
+        //   bZO(averageLoad[j + 1])
+        // ) {
+        //   let s = 0;
+        //   let n = Math.min(load[j + 1], averageLoad[j + 1]);
+        //   let r = 1 - n;
+        //   servers[key].fuzzyOutput = [r, n, s];
+        //   break;
+        load[j] > 0 &&
+        load[j + 1] === 0 &&
+        averageLoad[j] > 0 &&
+        averageLoad[j + 1] > 0
       ) {
-        let s = 0;
-        let n = Math.min(load[j + 1], averageLoad[j + 1]);
-        let r = 1 - n;
-        servers[key].fuzzyOutput = [r, n, s];
-        break;
+          let s = 0;
+          let n = Math.min(load[j + 1], averageLoad[j + 1]);
+          let r = 1 - n;
+          servers[key].fuzzyOutput = [r, n, s];
+          break;
+
       } else if (
-        load[j] === 0 &&
-        bZO(load[j + 1]) &&
-        bZO(averageLoad[j + 1]) &&
-        bZO(averageLoad[j])
+        // load[j] === 0 &&
+        // bZO(load[j + 1]) &&
+        // bZO(averageLoad[j + 1]) &&
+        // bZO(averageLoad[j])
+        averageLoad[j] > 0 && averageLoad[j + 1] === 0 && load[j] > 0 && load[j + 1] > 0
       ) {
-        console.log("hello");
         let r = 0;
         let n = Math.min(load[j + 1], averageLoad[j + 1]);
         let s = 1 - n;
@@ -357,108 +368,108 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
     }
   }
 
-//   for (let i = 0; i < servers.length; i++) {
-//     servers[i].fuzzyOutput = [0, 1, 0];
-//     let load = servers[i].fuzzyLoad;
-//     let length = averageLoad.length;
+  //   for (let i = 0; i < servers.length; i++) {
+  //     servers[i].fuzzyOutput = [0, 1, 0];
+  //     let load = servers[i].fuzzyLoad;
+  //     let length = averageLoad.length;
 
-//     if (load[length - 1] === 1 && averageLoad[length - 1] === 0) {
-//       servers[i].fuzzyOutput = [1, 0, 0];
-//       console.log(1);
-//     } else if (load[length - 1] === 0 && averageLoad[length - 1] === 1) {
-//       servers[i].fuzzyOutput = [0, 0, 1];
-//     } else if (load[length - 1] === 1 && averageLoad[length - 1] === 1) {
-//       servers[i].fuzzyOutput = [0, 1, 0];
-//     }
+  //     if (load[length - 1] === 1 && averageLoad[length - 1] === 0) {
+  //       servers[i].fuzzyOutput = [1, 0, 0];
+  //       console.log(1);
+  //     } else if (load[length - 1] === 0 && averageLoad[length - 1] === 1) {
+  //       servers[i].fuzzyOutput = [0, 0, 1];
+  //     } else if (load[length - 1] === 1 && averageLoad[length - 1] === 1) {
+  //       servers[i].fuzzyOutput = [0, 1, 0];
+  //     }
 
-//     for (let j = 0; j < length - 1; j++) {
-//       if (load[j] === 1 && averageLoad[j] === 0) {
-//         servers[i].fuzzyOutput = [1, 0, 0];
-//         break;
-//       } else if (load[j] === 0 && averageLoad[j] === 1) {
-//         servers[i].fuzzyOutput = [0, 0, 1];
-//         break;
-//       } else if (load[j] === 1 && averageLoad[j] === 1) {
-//         servers[i].fuzzyOutput = [0, 1, 0];
-//         break;
-//       } else if (
-//         bZO(load[j]) &&
-//         averageLoad[j] === 0 &&
-//         averageLoad[j + 1] === 0
-//       ) {
-//         servers[i].fuzzyOutput = [1, 0, 0];
-//         break;
-//       } else if (bZO(averageLoad[j]) && load[j] === 0 && load[j + 1] === 0) {
-//         servers[i].fuzzyOutput = [0, 0, 1];
-//         break;
-//       } else if (
-//         bZO(load[j]) &&
-//         bZO(load[j + 1]) &&
-//         averageLoad[j] === 0 &&
-//         bZO(averageLoad[j + 1])
-//       ) {
-//         let s = 0;
-//         let n = Math.min(load[j + 1], averageLoad[j + 1]);
-//         let r = 1 - n;
-//         servers[i].fuzzyOutput = [r, n, s];
-//         break;
-//       } else if (
-//         load[j] === 0 &&
-//         bZO(load[j + 1]) &&
-//         bZO(averageLoad[j + 1]) &&
-//         bZO(averageLoad[j])
-//       ) {
-//         console.log("hello");
-//         let r = 0;
-//         let n = Math.min(load[j + 1], averageLoad[j + 1]);
-//         let s = 1 - n;
-//         servers[i].fuzzyOutput = [r, n, s];
-//         break;
-//       } else if (
-//         bZO(load[j]) &&
-//         bZO(load[j + 1]) &&
-//         bZO(averageLoad[j + 1]) &&
-//         bZO(averageLoad[j])
-//       ) {
-//         if (load[j + 1] > averageLoad[j + 1]) {
-//           let r = 0;
-//           let n = Math.max(
-//             Math.min(averageLoad[j], load[j]),
-//             Math.min(averageLoad[j + 1], load[j + 1])
-//           );
-//           let s = 1 - n;
-//           servers[i].fuzzyOutput = [r, n, s];
-//           break;
-//         } else if (load[j + 1] < averageLoad[j + 1]) {
-//           let s = 0;
-//           let n = Math.max(
-//             Math.min(averageLoad[j], load[j]),
-//             Math.min(averageLoad[j + 1], load[j + 1])
-//           );
-//           let r = 1 - n;
-//           servers[i].fuzzyOutput = [r, n, s];
-//           break;
-//         } else {
-//           servers[i].fuzzyOutput = [0, 1, 0];
-//         }
-//       }
-//     }
-//   }
+  //     for (let j = 0; j < length - 1; j++) {
+  //       if (load[j] === 1 && averageLoad[j] === 0) {
+  //         servers[i].fuzzyOutput = [1, 0, 0];
+  //         break;
+  //       } else if (load[j] === 0 && averageLoad[j] === 1) {
+  //         servers[i].fuzzyOutput = [0, 0, 1];
+  //         break;
+  //       } else if (load[j] === 1 && averageLoad[j] === 1) {
+  //         servers[i].fuzzyOutput = [0, 1, 0];
+  //         break;
+  //       } else if (
+  //         bZO(load[j]) &&
+  //         averageLoad[j] === 0 &&
+  //         averageLoad[j + 1] === 0
+  //       ) {
+  //         servers[i].fuzzyOutput = [1, 0, 0];
+  //         break;
+  //       } else if (bZO(averageLoad[j]) && load[j] === 0 && load[j + 1] === 0) {
+  //         servers[i].fuzzyOutput = [0, 0, 1];
+  //         break;
+  //       } else if (
+  //         bZO(load[j]) &&
+  //         bZO(load[j + 1]) &&
+  //         averageLoad[j] === 0 &&
+  //         bZO(averageLoad[j + 1])
+  //       ) {
+  //         let s = 0;
+  //         let n = Math.min(load[j + 1], averageLoad[j + 1]);
+  //         let r = 1 - n;
+  //         servers[i].fuzzyOutput = [r, n, s];
+  //         break;
+  //       } else if (
+  //         load[j] === 0 &&
+  //         bZO(load[j + 1]) &&
+  //         bZO(averageLoad[j + 1]) &&
+  //         bZO(averageLoad[j])
+  //       ) {
+  //         console.log("hello");
+  //         let r = 0;
+  //         let n = Math.min(load[j + 1], averageLoad[j + 1]);
+  //         let s = 1 - n;
+  //         servers[i].fuzzyOutput = [r, n, s];
+  //         break;
+  //       } else if (
+  //         bZO(load[j]) &&
+  //         bZO(load[j + 1]) &&
+  //         bZO(averageLoad[j + 1]) &&
+  //         bZO(averageLoad[j])
+  //       ) {
+  //         if (load[j + 1] > averageLoad[j + 1]) {
+  //           let r = 0;
+  //           let n = Math.max(
+  //             Math.min(averageLoad[j], load[j]),
+  //             Math.min(averageLoad[j + 1], load[j + 1])
+  //           );
+  //           let s = 1 - n;
+  //           servers[i].fuzzyOutput = [r, n, s];
+  //           break;
+  //         } else if (load[j + 1] < averageLoad[j + 1]) {
+  //           let s = 0;
+  //           let n = Math.max(
+  //             Math.min(averageLoad[j], load[j]),
+  //             Math.min(averageLoad[j + 1], load[j + 1])
+  //           );
+  //           let r = 1 - n;
+  //           servers[i].fuzzyOutput = [r, n, s];
+  //           break;
+  //         } else {
+  //           servers[i].fuzzyOutput = [0, 1, 0];
+  //         }
+  //       }
+  //     }
+  //   }
   cluster.servers = servers;
   return cluster;
 }
 
 export function calcOutput(cluster: Cluster): Cluster {
   cluster.active = false;
-//   cluster.status = Array(cluster.servers.length).fill(0);
+  //   cluster.status = Array(cluster.servers.length).fill(0);
   let servers = cluster.servers;
   let maxSender = 0;
   let maxReceiver = 0;
   let senderIndex = 0;
   let receiverIndex = 0;
 
-  let senderKey = '';
-  let receiverKey = '';
+  let senderKey = "";
+  let receiverKey = "";
 
   for (let key in servers) {
     servers[key].status = 0;
@@ -472,17 +483,17 @@ export function calcOutput(cluster: Cluster): Cluster {
     }
   }
 
-//   for (let i = 0; i < servers.length; i++) {
-//     servers[i].status = 0;
-//     if (servers[i].fuzzyOutput[0] > maxReceiver) {
-//       maxReceiver = servers[i].fuzzyOutput[0];
-//       receiverIndex = i;
-//     }
-//     if (servers[i].fuzzyOutput[2] > maxSender) {
-//       maxSender = servers[i].fuzzyOutput[2];
-//       senderIndex = i;
-//     }
-//   }
+  //   for (let i = 0; i < servers.length; i++) {
+  //     servers[i].status = 0;
+  //     if (servers[i].fuzzyOutput[0] > maxReceiver) {
+  //       maxReceiver = servers[i].fuzzyOutput[0];
+  //       receiverIndex = i;
+  //     }
+  //     if (servers[i].fuzzyOutput[2] > maxSender) {
+  //       maxSender = servers[i].fuzzyOutput[2];
+  //       senderIndex = i;
+  //     }
+  //   }
   console.log(cluster);
 
   if (maxSender < cluster.sens || maxReceiver < cluster.sens) {

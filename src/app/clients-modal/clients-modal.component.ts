@@ -35,6 +35,9 @@ export class ClientsModalComponent implements OnInit {
   }
 
   addClients(formData) {
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: false
+    })
     console.log(formData);
     let data = {
       ramUsage: formData.ramUsage,
@@ -48,10 +51,19 @@ export class ClientsModalComponent implements OnInit {
         )
         .push(data);
     }
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: true
+    })
     this.dialogRef.close();
+    // this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+    //   active: true
+    // })
   }
 
   removeClients(formData) {
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: false
+    })
     let clients = this.receivedData.clients;
     let numberOfClients = Object.keys(clients).length;
     if (formData.numberOfRemove < numberOfClients) {
@@ -65,6 +77,9 @@ export class ClientsModalComponent implements OnInit {
           .remove();
       }
     }
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: true
+    })
     this.dialogRef.close();
   }
   onCancel(): void {

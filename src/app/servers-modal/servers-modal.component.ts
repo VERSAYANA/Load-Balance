@@ -14,7 +14,7 @@ import { FormBuilder, Validators } from "@angular/forms";
 })
 export class ServersModalComponent implements OnInit {
   serverForm;
-  type
+  type;
   constructor(
     private db: AngularFireDatabase,
     private formBuilder: FormBuilder,
@@ -24,7 +24,7 @@ export class ServersModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.type = this.receivedData.type
+    this.type = this.receivedData.type;
     let name;
     let ram;
     let cpu;
@@ -50,6 +50,9 @@ export class ServersModalComponent implements OnInit {
   }
 
   onSubmit(formData) {
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: false
+    });
     console.log(formData, this.receivedData.clusterId);
     const data = {
       name: formData.name,
@@ -60,8 +63,19 @@ export class ServersModalComponent implements OnInit {
     if (this.receivedData.type === "Modify") {
       this.modifyServer(data);
     } else {
-      this.addServer(data);
+      this.addServer({
+        ...data,
+        ramUsage: 0,
+        cpuUsage: 0,
+        hardUsage: 0,
+        ramUtilization: 0,
+        cpuUtilization: 0,
+        hardUtilization: 0
+      });
     }
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: true
+    });
     this.dialogRef.close();
   }
 
