@@ -17,6 +17,7 @@ export interface Server {
   fuzzyLoad?: fuzzyLoad;
   fuzzyOutput?: fuzzyOutput;
   status?: status;
+  loadMinusAverage?: fuzzyLoad;
 }
 
 export interface Cluster {
@@ -265,6 +266,59 @@ export function calcServerFuzzyLoad(server: Server): Server {
   return server;
 }
 
+export function calcFuzzyOutput2(cluster: Cluster): Cluster {
+  let average = cluster.fuzzyLoad;
+  let servers = cluster.servers;
+  // let loadMinusAverage;
+  for (let key in servers) {
+    let load = servers[key].fuzzyLoad;
+    let loadMinusAverage : fuzzyLoad = [0, 0, 0, 0, 0];
+    for (let i = 0; i < load.length; i++) {
+      // loadMinusAverage.push(load[i] - average[i]);
+      loadMinusAverage[i] = load[i] - average[i];
+    }
+    servers[key].loadMinusAverage = loadMinusAverage;
+  }
+  for (let key in servers) {
+    let r = 0;
+    let n = 0;
+    let s = 0;
+    for (let i = 0; i < servers[key].loadMinusAverage.length; i++) {
+
+      if (servers[key].loadMinusAverage[i] < 0) {
+        servers[key].fuzzyOutput = loadIsMore(servers[key].loadMinusAverage);
+        break;
+      } else if (servers[key].loadMinusAverage[i] > 0) {
+        servers[key].fuzzyOutput = loadIsLess(servers[key].loadMinusAverage);
+        break;
+      }
+    }
+
+
+  }
+  return cluster;
+}
+
+function loadIsMore(input): fuzzyOutput {
+  let s = 0;
+  for(let i = 0; i < input.length; i++) {
+    if(input[i] > 0) {
+      s = s + input[i]
+    }
+  }
+  return [0, 1 - s, s]
+}
+
+function loadIsLess(input): fuzzyOutput {
+  let r = 0;
+  for(let i = 0; i < input.length; i++) {
+    if(input[i] > 0) {
+      r = r + input[i]
+    }
+  }
+  return [r, 1 - r, 0]
+}
+
 export function calcFuzzyOutput(cluster: Cluster): Cluster {
   let averageLoad = cluster.fuzzyLoad;
   let servers = cluster.servers;
@@ -511,11 +565,11 @@ export function calcOutput(cluster: Cluster): Cluster {
   console.log(cluster);
 
   if (
-    (maxSender < 1 - cluster.sens &&
-    maxReceiver < 1 - cluster.sens) ||
-    Math.abs(maxSender - maxReceiver) < 0.05
+    maxSender < 1 - cluster.sens &&
+    maxReceiver < 1 - cluster.sens
+    //  ||(maxSender + maxReceiver) < 1
   ) {
-    console.log(Math.abs(maxSender - maxReceiver))
+    console.log(maxSender + maxReceiver);
     console.log("hello");
     return cluster;
   } else {

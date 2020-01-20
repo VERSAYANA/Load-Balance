@@ -12,7 +12,8 @@ import {
   fuzzifyCluster,
   calcFuzzyOutput,
   calcOutput,
-  addClient
+  addClient,
+  calcFuzzyOutput2
 } from "../modules";
 
 addEventListener("message", ({ data }) => {
@@ -49,7 +50,7 @@ addEventListener("message", ({ data }) => {
   fuzzifyCluster(cluster);
   // console.log(cluster);
 
-  calcFuzzyOutput(cluster);
+  calcFuzzyOutput2(cluster);
   // console.log(cluster);
 
   calcOutput(cluster);
