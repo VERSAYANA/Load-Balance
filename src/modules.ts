@@ -510,7 +510,13 @@ export function calcOutput(cluster: Cluster): Cluster {
   //   }
   console.log(cluster);
 
-  if (maxSender < 1 - cluster.sens || maxReceiver < 1 - cluster.sens) {
+  if (
+    (maxSender < 1 - cluster.sens &&
+    maxReceiver < 1 - cluster.sens) ||
+    Math.abs(maxSender - maxReceiver) < 0.05
+  ) {
+    console.log(Math.abs(maxSender - maxReceiver))
+    console.log("hello");
     return cluster;
   } else {
     servers[senderKey].status = 1;
