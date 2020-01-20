@@ -19,13 +19,22 @@ addEventListener("message", ({ data }) => {
   let cluster: Cluster = data;
 
   // console.log(data);
-
-  for (let i = 0; i < cluster.servers.length; i++) {
-    calServerUtilization(cluster.servers[i]);
-    // cluster.servers[i] = calServerLoad(cluster.servers[i])
-    calServerLoad(cluster.servers[i]);
-    calcServerFuzzyLoad(cluster.servers[i]);
+  if (cluster.hasOwnProperty("servers")) {
+    for (let key in cluster.servers) {
+      calServerUtilization(cluster.servers[key]);
+      calServerLoad(cluster.servers[key]);
+      calcServerFuzzyLoad(cluster.servers[key]);
+    }
+  } else {
+    return;
   }
+
+  // for (let i = 0; i < cluster.servers.length; i++) {
+  //   calServerUtilization(cluster.servers[i]);
+  //   // cluster.servers[i] = calServerLoad(cluster.servers[i])
+  //   calServerLoad(cluster.servers[i]);
+  //   calcServerFuzzyLoad(cluster.servers[i]);
+  // }
   // console.log(cluster);
 
   calcClusterCapacityAndUsage(cluster);
@@ -47,14 +56,18 @@ addEventListener("message", ({ data }) => {
   // console.log(cluster);
 
   if (cluster.active) {
-    addClient(
-      cluster.servers[cluster.senderIndex].clients.pop(),
-      cluster.servers[cluster.receiverIndex]
-    );
+    let keys = Object.keys(cluster.servers[cluster.senderKey].clients);
+    let sendingItemId = keys[keys.length - 1];
+    let sendingItem = cluster.servers[cluster.senderKey].clients[sendingItemId];
+    delete cluster.servers[cluster.senderKey].clients[sendingItemId];
+    cluster.servers[cluster.receiverKey].clients[sendingItemId] = sendingItem;
   }
 
   // console.log(cluster);
 
   // const response = `worker response to ${data}`;
-  postMessage(cluster);
+  setTimeout(function() {
+    postMessage(cluster);
+  }, cluster.delay);
+  // postMessage(cluster);
 });
