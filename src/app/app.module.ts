@@ -8,7 +8,6 @@ import { AngularFireModule } from "@angular/fire";
 import { environment } from "../environments/environment";
 import { AngularFireDatabaseModule } from "@angular/fire/database";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-
 import { MatSliderModule } from "@angular/material/slider";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatIconModule } from "@angular/material/icon";
@@ -29,6 +28,8 @@ import { ServerComponent } from "./server/server.component";
 import { MatCardModule } from "@angular/material/card";
 import { ClientsModalComponent } from "./clients-modal/clients-modal.component";
 import { MatDividerModule } from "@angular/material/divider";
+import { HttpClientModule } from "@angular/common/http";
+
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { MatDividerModule } from "@angular/material/divider";
       { path: "clusters/:clusterId", component: ClusterComponent }
     ]),
     BrowserAnimationsModule,
+    HttpClientModule,
     MatSliderModule,
     MatToolbarModule,
     MatIconModule,

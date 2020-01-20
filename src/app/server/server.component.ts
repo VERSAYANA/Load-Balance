@@ -8,6 +8,8 @@ import {
 import { CreateClusterModalComponent } from "src/modals/create-cluster-modal/create-cluster-modal.component";
 import { ServersModalComponent } from "../servers-modal/servers-modal.component";
 import { ClientsModalComponent } from "../clients-modal/clients-modal.component";
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: "app-server",
@@ -18,7 +20,36 @@ export class ServerComponent implements OnInit {
   @Input() id: string;
   @Input() info;
   @Input() clusterId: string;
-  constructor(public dialog: MatDialog) {}
+  constructor(
+    public dialog: MatDialog,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer
+  ) {
+    this.matIconRegistry.addSvgIcon(
+      `server`,
+      this.domSanitizer.bypassSecurityTrustResourceUrl(`../../assets/iconmonstr-server-4.svg`)
+    );
+    this.matIconRegistry.addSvgIcon(
+      `client`,
+      this.domSanitizer.bypassSecurityTrustResourceUrl(`../../assets/iconmonstr-laptop-6.svg`)
+    );
+    this.matIconRegistry.addSvgIcon(
+      `cpu`,
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        `../../assets/iconmonstr-cpu-6.svg`
+      )
+    );
+    this.matIconRegistry.addSvgIcon(
+      `ram`,
+      this.domSanitizer.bypassSecurityTrustResourceUrl(`../../assets/ram.svg`)
+    );
+    this.matIconRegistry.addSvgIcon(
+      `disk`,
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        `../../assets/iconmonstr-disk-2.svg`
+      )
+    );
+  }
 
   ngOnInit() {}
 
@@ -60,6 +91,12 @@ export class ServerComponent implements OnInit {
       return Object.keys(this.info.clients).length;
     } else {
       return 0;
+    }
+  }
+  status(s) {
+    console.log(s === this.info.status)
+    if (s === this.info.status) {
+      return true;
     }
   }
 }

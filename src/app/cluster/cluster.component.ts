@@ -44,7 +44,7 @@ export class ClusterComponent implements OnInit {
         // console.log(...this.clusterData.servers)
         // console.log(typeof this.clusterData.servers)
         for (let key in this.clusterData.servers) {
-          console.log(key, this.clusterData.servers[key]);
+          // console.log(key, this.clusterData.servers[key]);
         }
         // for (const [key, value] of data.servers) {
         //   console.log(`There are ${key} ${value}s`)

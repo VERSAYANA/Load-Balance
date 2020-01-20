@@ -293,6 +293,18 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
       } else if (load[j] === 1 && averageLoad[j] === 1) {
         servers[key].fuzzyOutput = [0, 1, 0];
         break;
+      } else if (averageLoad[j] === 0 && bZO(load[j])) {
+        let s = 0;
+        let n = Math.min(load[j + 1], averageLoad[j + 1]);
+        let r = 1 - n;
+        servers[key].fuzzyOutput = [r, n, s];
+        break;
+      } else if (load[j] === 0 && bZO(averageLoad[j])) {
+        let r = 0;
+        let n = Math.min(load[j + 1], averageLoad[j + 1]);
+        let s = 1 - n;
+        servers[key].fuzzyOutput = [r, n, s];
+        break;
       } else if (
         bZO(load[j]) &&
         averageLoad[j] === 0 &&
@@ -319,18 +331,20 @@ export function calcFuzzyOutput(cluster: Cluster): Cluster {
         averageLoad[j] > 0 &&
         averageLoad[j + 1] > 0
       ) {
-          let s = 0;
-          let n = Math.min(load[j + 1], averageLoad[j + 1]);
-          let r = 1 - n;
-          servers[key].fuzzyOutput = [r, n, s];
-          break;
-
+        let s = 0;
+        let n = Math.min(load[j + 1], averageLoad[j + 1]);
+        let r = 1 - n;
+        servers[key].fuzzyOutput = [r, n, s];
+        break;
       } else if (
         // load[j] === 0 &&
         // bZO(load[j + 1]) &&
         // bZO(averageLoad[j + 1]) &&
         // bZO(averageLoad[j])
-        averageLoad[j] > 0 && averageLoad[j + 1] === 0 && load[j] > 0 && load[j + 1] > 0
+        averageLoad[j] > 0 &&
+        averageLoad[j + 1] === 0 &&
+        load[j] > 0 &&
+        load[j + 1] > 0
       ) {
         let r = 0;
         let n = Math.min(load[j + 1], averageLoad[j + 1]);
@@ -496,7 +510,7 @@ export function calcOutput(cluster: Cluster): Cluster {
   //   }
   console.log(cluster);
 
-  if (maxSender < (1 - cluster.sens) || maxReceiver < (1 - cluster.sens)) {
+  if (maxSender < 1 - cluster.sens || maxReceiver < 1 - cluster.sens) {
     return cluster;
   } else {
     servers[senderKey].status = 1;

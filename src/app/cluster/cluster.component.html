@@ -12,11 +12,13 @@
     <!-- <p *ngFor="let server of clusterData?.servers | keyvalue"> -->
     <!-- {{ server.key }} - {{ server.value.ram }}
     </p> -->
-    <app-server
-      *ngFor="let server of clusterData?.servers | keyvalue"
-      [id]="server.key"
-      [info]="server.value"
-      [clusterId]="clusterId"
-    ></app-server>
+    <div class="servers-container">
+      <app-server
+        *ngFor="let server of clusterData?.servers | keyvalue"
+        [id]="server.key"
+        [info]="server.value"
+        [clusterId]="clusterId"
+      ></app-server>
+    </div>
   </div>
 </div>
