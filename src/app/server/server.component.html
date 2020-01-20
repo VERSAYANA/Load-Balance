@@ -1,12 +1,22 @@
 <mat-card class="card">
   <div class="top">
-    <button (click)="addOrRemoveClient()" mat-icon-button color="primary">
-      <mat-icon>add</mat-icon>
-    </button>
+    <div class="buttons-container">
+      <button (click)="addOrRemoveClient()" mat-icon-button color="primary">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button (click)="addOrRemoveClient()" mat-icon-button color="accent">
+        <mat-icon>remove</mat-icon>
+      </button>
+    </div>
 
-    <button (click)="modifyServer()" mat-icon-button color="primary">
-      <mat-icon>settings</mat-icon>
-    </button>
+    <div class="buttons-container">
+      <button (click)="modifyServer()" mat-icon-button color="primary">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <button (click)="deleteServer()" mat-icon-button color="accent">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
   </div>
 
   <div class="computer">

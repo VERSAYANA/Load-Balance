@@ -4,6 +4,12 @@
   .top {
     display: flex;
     justify-content: space-between;
+    .buttons-container {
+      display: flex;
+      flex-direction: column;
+      // justify-content: ;
+    }
+
   }
   .computer {
     display: flex;

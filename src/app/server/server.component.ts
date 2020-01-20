@@ -23,15 +23,20 @@ export class ServerComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    private db: AngularFireDatabase
   ) {
     this.matIconRegistry.addSvgIcon(
       `server`,
-      this.domSanitizer.bypassSecurityTrustResourceUrl(`../../assets/iconmonstr-server-4.svg`)
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        `../../assets/iconmonstr-server-4.svg`
+      )
     );
     this.matIconRegistry.addSvgIcon(
       `client`,
-      this.domSanitizer.bypassSecurityTrustResourceUrl(`../../assets/iconmonstr-laptop-6.svg`)
+      this.domSanitizer.bypassSecurityTrustResourceUrl(
+        `../../assets/iconmonstr-laptop-6.svg`
+      )
     );
     this.matIconRegistry.addSvgIcon(
       `cpu`,
@@ -93,8 +98,12 @@ export class ServerComponent implements OnInit {
       return 0;
     }
   }
+  deleteServer() {
+    console.log(`clusters/${this.clusterId}/${this.id}`)
+    this.db.object(`clusters/${this.clusterId}/servers/${this.id}`).remove();
+  }
   status(s) {
-    console.log(s === this.info.status)
+    console.log(s === this.info.status);
     if (s === this.info.status) {
       return true;
     }
