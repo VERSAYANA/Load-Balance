@@ -933,7 +933,6 @@ export class AppComponent {
     //   // worker.postMessage(data)
     // });
   }
-  // title = 'social-media';
 
   openDialog(): void {
     const dialogRef = this.dialog.open(CreateClusterModalComponent, {
