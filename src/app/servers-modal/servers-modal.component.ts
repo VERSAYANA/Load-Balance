@@ -53,7 +53,6 @@ export class ServersModalComponent implements OnInit {
     this.db.object(`clusters/${this.receivedData.clusterId}`).update({
       active: false
     });
-    console.log(formData, this.receivedData.clusterId);
     const data = {
       name: formData.name,
       ram: formData.ram,
@@ -70,17 +69,30 @@ export class ServersModalComponent implements OnInit {
         hardUsage: 0,
         ramUtilization: 0,
         cpuUtilization: 0,
-        hardUtilization: 0
+        hardUtilization: 0,
+        clients: [],
+        load: 0
       });
     }
-    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
-      active: true
-    });
+
     this.dialogRef.close();
   }
 
   addServer(data) {
-    this.db.list(`clusters/${this.receivedData.clusterId}/servers`).push(data);
+    let pushId = this.db.createPushId();
+    this.db
+      .list(`clusters/${this.receivedData.clusterId}/servers`)
+      .set(pushId, data);
+    this.db
+      .list(`clusters/${this.receivedData.clusterId}/servers/${pushId}/clients`)
+      .push({
+        ramUsage: 10,
+        cpuUsage: 1,
+        hardUsage: 80
+      });
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: true
+    });
   }
   modifyServer(data) {
     this.db
@@ -88,6 +100,9 @@ export class ServersModalComponent implements OnInit {
         `clusters/${this.receivedData.clusterId}/servers/${this.receivedData.serverId}`
       )
       .update(data);
+    this.db.object(`clusters/${this.receivedData.clusterId}`).update({
+      active: true
+    });
   }
 
   onCancel(): void {

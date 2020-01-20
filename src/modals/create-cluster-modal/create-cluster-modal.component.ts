@@ -50,6 +50,9 @@ export class CreateClusterModalComponent implements OnInit {
       sens: data.sens,
       delay: data.delay
     });
+    // this.db.object(`clusters/${pushId}`).update({
+    //   active: true
+    // })
   }
 
   updateCluster(data) {
@@ -61,6 +64,9 @@ export class CreateClusterModalComponent implements OnInit {
       sens: data.sens,
       delay: data.delay
     });
+    this.db.object(`clusters/${this.data.id}`).update({
+      active: true
+    })
   }
 
   onSubmit(clusterData) {
@@ -97,5 +103,12 @@ export class CreateClusterModalComponent implements OnInit {
     this.createClusterForm = this.formBuilder.group({
       name: [this.name, Validators.required]
     });
+  }
+  getTitle() {
+    if (this.type === "Update") {
+      return "Modify Cluster"
+    } else {
+      return "Create A New Cluster"
+    }
   }
 }

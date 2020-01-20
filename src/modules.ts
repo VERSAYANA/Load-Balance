@@ -496,7 +496,7 @@ export function calcOutput(cluster: Cluster): Cluster {
   //   }
   console.log(cluster);
 
-  if (maxSender < cluster.sens || maxReceiver < cluster.sens) {
+  if (maxSender < (1 - cluster.sens) || maxReceiver < (1 - cluster.sens)) {
     return cluster;
   } else {
     servers[senderKey].status = 1;
