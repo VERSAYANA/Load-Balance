@@ -71,7 +71,8 @@ export class ServersModalComponent implements OnInit {
         cpuUtilization: 0,
         hardUtilization: 0,
         clients: [],
-        load: 0
+        load: 0,
+        status: 0
       });
     }
 

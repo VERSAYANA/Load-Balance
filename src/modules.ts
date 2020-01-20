@@ -539,16 +539,22 @@ export function calcOutput(cluster: Cluster): Cluster {
   let senderKey = "";
   let receiverKey = "";
 
+
   for (let key in servers) {
     servers[key].status = 0;
-    if (servers[key].fuzzyOutput[0] > maxReceiver) {
-      maxReceiver = servers[key].fuzzyOutput[0];
-      receiverKey = key;
+    if (servers[key].hasOwnProperty("fuzzyOutput")) {
+      if (servers[key].fuzzyOutput[0] > maxReceiver) {
+        maxReceiver = servers[key].fuzzyOutput[0];
+        receiverKey = key;
+      }
+      if (servers[key].fuzzyOutput[2] > maxSender) {
+        maxSender = servers[key].fuzzyOutput[2];
+        senderKey = key;
+      }
+    } else {
+      break;
     }
-    if (servers[key].fuzzyOutput[2] > maxSender) {
-      maxSender = servers[key].fuzzyOutput[2];
-      senderKey = key;
-    }
+
   }
 
   //   for (let i = 0; i < servers.length; i++) {
@@ -573,11 +579,17 @@ export function calcOutput(cluster: Cluster): Cluster {
     console.log("hello");
     return cluster;
   } else {
-    servers[senderKey].status = 1;
-    servers[receiverKey].status = -1;
-    cluster.senderKey = senderKey;
-    cluster.receiverKey = receiverKey;
-    cluster.active = true;
+    // if (typeof Worker !== 'undefined')
+    if (typeof servers[senderKey] === 'undefined' || servers[receiverKey] === 'undefined') {
+      return cluster;
+    } else {
+      servers[senderKey].status = 1;
+      servers[receiverKey].status = -1;
+      cluster.senderKey = senderKey;
+      cluster.receiverKey = receiverKey;
+      cluster.active = true;
+    }
+
 
     // let clusterStatus: Array<status> = [];
 
