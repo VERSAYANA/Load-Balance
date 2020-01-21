@@ -69,6 +69,7 @@ type status = -1 | 0 | 1;
 
 export function calServerUtilization(server: Server): Server {
   // console.log(server);
+  console.log(server);
   let totalRamUsage: number = 0;
   let totalCpuUsage: number = 0;
   let totalHardUsage: number = 0;
@@ -99,6 +100,7 @@ export function calServerUtilization(server: Server): Server {
   server.ramUtilization = (totalRamUsage / server.ram) * 100;
   server.cpuUtilization = (totalCpuUsage / server.cpu) * 100;
   server.hardUtilization = (totalHardUsage / server.hard) * 100;
+  console.log(server);
   return server;
 }
 
@@ -549,11 +551,12 @@ export function calcOutput(cluster: Cluster): Cluster {
   for (let key in servers) {
     servers[key].status = 0;
     // if (servers[key].hasOwnProperty("fuzzyOutput")) {
-    if (servers[key].fuzzyOutput[0] > maxReceiver) {
+    if (servers[key].fuzzyOutput[0] >= maxReceiver) {
       maxReceiver = servers[key].fuzzyOutput[0];
+      // console.log(key);
       receiverKey = key;
     }
-    if (servers[key].fuzzyOutput[2] > maxSender) {
+    if (servers[key].fuzzyOutput[2] >= maxSender) {
       maxSender = servers[key].fuzzyOutput[2];
       senderKey = key;
     }
