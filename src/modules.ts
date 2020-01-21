@@ -595,6 +595,9 @@ export function calcOutput(cluster: Cluster): Cluster {
     // if (receiverKey == "" || senderKey == "") {
     //   return cluster;
     // }
+    if (senderKey === receiverKey) {
+      return cluster;
+    }
     servers[senderKey].status = 1;
     servers[receiverKey].status = -1;
     cluster.senderKey = senderKey;
